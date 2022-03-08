@@ -1,39 +1,52 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CommonResponse;
+import com.example.demo.dto.ProductDto;
+import com.example.demo.entity.ProductEntity;
+import com.example.demo.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api/v1/product")
+@RequestMapping(value = "/api/v1/products")
 public class ProductController {
 
+    private final ProductService service;
+
+    public ProductController(ProductService service) {
+        this.service = service;
+    }
+
     @GetMapping("")
-    public CommonResponse getProducts() {
-        //TODO: Add code to get all product list here
-        return new CommonResponse("Dummy Products");
+    public Iterable<ProductEntity> getProducts() {
+        return service.all();
     }
 
     @GetMapping("{id}")
-    public CommonResponse getProduct(@PathVariable("id") String id) {
-        //TODO: Add code to get product here
-        return new CommonResponse("Dummy Product");
+    public ProductEntity getProduct(@PathVariable("id") Long id) {
+        return service.one(id);
     }
 
     @PostMapping("")
-    public CommonResponse addProduct() {
-        //TODO: Add code to post here
-        return new CommonResponse("Successfully add new product");
+    public ProductEntity addProduct(@RequestBody ProductDto productDto) {
+        return service.create(productDto);
     }
 
-    @PutMapping("/stock")
-    public CommonResponse updateStock() {
-        //TODO: Add code to post here
-        return new CommonResponse("Successfully update stock");
+    @PutMapping("{id}")
+    public ProductEntity updateProduct(
+            @PathVariable("id") Long id,
+            @RequestBody ProductDto productDto
+    ) {
+        return service.update(id, productDto);
     }
+
+//    @PutMapping("/stock")
+//    public CommonResponse updateStock() {
+//        return service.update()
+//    }
 
     @DeleteMapping("{id}")
-    public CommonResponse deleteProduct(@PathVariable("id") String id) {
-        //TODO: Add code to get product list here
+    public CommonResponse deleteProduct(@PathVariable("id") Long id) {
+        service.destroy(id);
         return new CommonResponse("Successfully delete product");
     }
 }
