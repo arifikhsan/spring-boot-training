@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends CrudRepository<ProductEntity, Long> {
     List<ProductEntity> findByQuantityGreaterThan(Long stock);
+    List<ProductEntity> findByPriceLessThan(Long price);
 }

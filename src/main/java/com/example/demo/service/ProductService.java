@@ -25,6 +25,10 @@ public class ProductService {
         return repository.findByQuantityGreaterThan(0L);
     }
 
+    public List<ProductEntity> allWithMaxPrice(Long price) {
+        return repository.findByPriceLessThan(price);
+    }
+
     public List<ProductEntity> fetch(Boolean isInStock) {
         return isInStock ? allInStock() : all();
     }

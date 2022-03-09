@@ -21,12 +21,18 @@ public class ProductController {
         this.service = service;
     }
 
-    @GetMapping("")
+//    @GetMapping("")
+//    public List<ProductEntity> getProducts(
+//            @RequestParam(value = "inStock", defaultValue = "0") Boolean isInStock
+//    ) {
+//        return isInStock ? service.fetch(isInStock) : service.all();
+//    }
+
+    @GetMapping
     public List<ProductEntity> getProducts(
-            @RequestParam(value = "inStock", defaultValue = "0") Boolean isInStock
+            @RequestParam(value = "max-price", required = false) Long price
     ) {
-        System.out.println(isInStock);
-        return isInStock ? service.fetch(isInStock) : service.all();
+        return price != null ? service.allWithMaxPrice(price) : service.all();
     }
 
     @GetMapping("{id}")
