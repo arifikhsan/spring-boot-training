@@ -6,6 +6,6 @@ Name: Arif Ikhsanudin
 
 ![img.png](img.png)
 
-> with filter price below 100
+> with filter price below 200
 
 ![img_1.png](img_1.png)
