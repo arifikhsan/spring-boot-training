@@ -4,6 +4,7 @@ import com.example.demo.dto.BuyProductDto;
 import com.example.demo.dto.ProductDto;
 import com.example.demo.dto.UpdateStockRequestDto;
 import com.example.demo.entity.ProductEntity;
+import com.example.demo.entity.TransactionEntity;
 import com.example.demo.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,12 @@ public class ProductService {
     Logger logger = LoggerFactory.getLogger(ProductService.class);
     ProductRepository repository;
     StaffService staffService;
+    TransactionService transactionService;
 
-    public ProductService(ProductRepository repository, StaffService staffService) {
+    public ProductService(ProductRepository repository, StaffService staffService, TransactionService transactionService) {
         this.repository = repository;
         this.staffService = staffService;
+        this.transactionService = transactionService;
     }
 
     public ProductEntity add(ProductDto request) {
@@ -70,6 +73,7 @@ public class ProductService {
         if (staff.getBalance() < (product.getPrice() * body.getQuantity())) throw new Exception("Saldo tidak cukup");
         staff.setBalance((int) (staff.getBalance() - (product.getPrice() * body.getQuantity())));
         product.setStock(product.getStock() - body.getQuantity());
+        transactionService.create(new TransactionEntity(staff, product, body.getQuantity()));
         return product;
     }
 }
