@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ProductDto;
+import com.example.demo.dto.UpdateStockDto;
 import com.example.demo.entity.ProductEntity;
 import com.example.demo.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -16,13 +17,21 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public Iterable<ProductEntity> all() {
-        return repository.findAll();
+    public List<ProductEntity> all() {
+        return (List<ProductEntity>) repository.findAll();
     }
 
-    public ProductEntity one(Long id) {
+    public List<ProductEntity> allInStock() {
+        return repository.findByQuantityGreaterThan(0L);
+    }
+
+    public List<ProductEntity> fetch(Boolean isInStock) {
+        return isInStock ? allInStock() : all();
+    }
+
+    public ProductEntity one(Long id) throws Exception {
         var productOption = repository.findById(id);
-        if (productOption.isEmpty()) throw new NotFoundException("Tidak nemu gan");
+        if (productOption.isEmpty()) throw new Exception("Tidak nemu gan");
         return productOption.get();
     }
 
@@ -35,15 +44,20 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductEntity update(Long id, ProductDto productDto) {
-        var productOption = repository.findById(id);
-        if (productOption.isEmpty()) throw new NotFoundException("Tidak nemu gan");
-        var savedProduct = productOption.get();
+    public ProductEntity update(Long id, ProductDto productDto) throws Exception {
+        var savedProduct = one(id);
         if (productDto.getName() != null && !productDto.getName().isEmpty())
             savedProduct.setName(productDto.getName());
         if (productDto.getPrice() != null) savedProduct.setPrice(productDto.getPrice());
         if (productDto.getQuantity() != null) savedProduct.setQuantity(productDto.getQuantity());
         return savedProduct;
+    }
+
+    @Transactional
+    public ProductEntity updateStock(UpdateStockDto updateStockDto) throws Exception {
+        var product = one(updateStockDto.getId());
+        product.setQuantity(product.getQuantity() + updateStockDto.getNumberOfStock());
+        return product;
     }
 
     public void destroy(Long id) {
