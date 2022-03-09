@@ -17,8 +17,8 @@ public class StaffController {
         this.staffService = staffService;
     }
 
-    @PostMapping("")
-    public StaffEntity addProduct(@RequestBody StaffDto request) {
-        return staffService.add(request);
+    @PostMapping
+    public StaffEntity create(@RequestBody StaffDto request) {
+        return staffService.create(request);
     }
 }

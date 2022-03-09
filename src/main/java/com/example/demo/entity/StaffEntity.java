@@ -5,12 +5,20 @@ import javax.persistence.*;
 @Entity
 public class StaffEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
 
     @OneToOne(cascade = {CascadeType.ALL})
     private BasketEntity basket;
+
+    public StaffEntity() {
+    }
+
+    public StaffEntity(String name, BasketEntity basket) {
+        this.name = name;
+        this.basket = basket;
+    }
 
     public long getId() {
         return id;

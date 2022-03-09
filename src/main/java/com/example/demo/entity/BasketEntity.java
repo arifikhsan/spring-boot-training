@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class BasketEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long amount = 0;
 

@@ -14,11 +14,8 @@ public class StaffService {
         this.repository = repository;
     }
 
-    public StaffEntity add(StaffDto request) {
-        StaffEntity staff = new StaffEntity();
-        staff.setName(request.getName());
-        staff.setBasket(new BasketEntity());
-
+    public StaffEntity create(StaffDto staffDto) {
+        StaffEntity staff = new StaffEntity(staffDto.getName(), new BasketEntity());
         return repository.save(staff);
     }
 
